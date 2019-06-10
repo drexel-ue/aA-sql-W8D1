@@ -22,6 +22,14 @@ class Question
         data.map { |datum| Question.new(datum) }
     end
 
+    def self.find_by_id(qid)
+        data = QuestionDBConnection.instance.execute(<<-SQL, qid: qid)
+          select * from questions
+          where id = :qid
+        SQL
+        data.map { |datum| Question.new(datum) }
+      end
+
     def initialize(info)
         @id = info['id']
         @title = info['title']
