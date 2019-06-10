@@ -98,3 +98,31 @@ class QuestionFollow
 
 end
 
+
+class Reply
+
+  attr_accessor :id, :user_id, :question_id, :parent_id, :body
+
+  def self.all
+      data = QuestionDBConnection.instance.execute("SELECT * FROM replies")
+      data.map { |datum| Reply.new(datum) }
+  end
+
+  def self.find_by_id(r_id)
+      data = QuestionDBConnection.instance.execute(<<-SQL, r_id: r_id)
+        select * from replies
+        where id = :r_id
+      SQL
+      data.map { |datum| QuestionFollow.new(datum) }
+  end
+
+  def initialize(info)
+      @id = info['id']
+      @user_id = info['user_id']
+      @question_id = info['question_id']
+      @parent_id = info['parent_id']
+      @body = info['body']
+  end
+
+end
+
