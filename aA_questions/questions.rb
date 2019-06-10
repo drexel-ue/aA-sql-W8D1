@@ -62,7 +62,7 @@ class User
       where fname = :fname and lname = :lname
     SQL
     data.map { |datum| User.new(datum) }
-end
+  end
 
   def initialize(info)
       @id = info['id']
@@ -72,4 +72,29 @@ end
 
 end
 
+
+class QuestionFollow
+
+  attr_accessor :id, :user_id, :question_id
+
+  def self.all
+      data = QuestionDBConnection.instance.execute("SELECT * FROM question_follows")
+      data.map { |datum| QuestionFollow.new(datum) }
+  end
+
+  def self.find_by_id(qf_id)
+      data = QuestionDBConnection.instance.execute(<<-SQL, qf_id: qf_id)
+        select * from question_follows
+        where id = :qf_id
+      SQL
+      data.map { |datum| QuestionFollow.new(datum) }
+  end
+
+  def initialize(info)
+      @id = info['id']
+      @user_id = info['user_id']
+      @question_id = info['question_id']
+  end
+
+end
 
