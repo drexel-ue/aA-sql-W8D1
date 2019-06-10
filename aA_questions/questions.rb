@@ -30,6 +30,15 @@ class Question
         data.map { |datum| Question.new(datum) }
     end
 
+    def self.find_by_author_id(a_id)
+        data = QuestionDBConnection.instance.execute(<<-SQL, a_id: a_id)
+          select * from questions
+          where author_id = :a_id
+        SQL
+        data.map { |datum| Question.new(datum) }
+    end
+
+
     def initialize(info)
         @id = info['id']
         @title = info['title']
