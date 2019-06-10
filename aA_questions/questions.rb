@@ -113,7 +113,7 @@ class Reply
         select * from replies
         where id = :r_id
       SQL
-      data.map { |datum| QuestionFollow.new(datum) }
+      data.map { |datum| Reply.new(datum) }
   end
 
   def initialize(info)
@@ -122,6 +122,31 @@ class Reply
       @question_id = info['question_id']
       @parent_id = info['parent_id']
       @body = info['body']
+  end
+
+end
+
+class QuestionLike
+
+  attr_accessor :id, :user_id, :question_id
+
+  def self.all
+      data = QuestionDBConnection.instance.execute("SELECT * FROM question_likes")
+      data.map { |datum| QuestionLike.new(datum) }
+  end
+
+  def self.find_by_id(ql_id)
+      data = QuestionDBConnection.instance.execute(<<-SQL, ql_id: ql_id)
+        select * from question_likes
+        where id = :ql_id
+      SQL
+      data.map { |datum| QuestionLike.new(datum) }
+  end
+
+  def initialize(info)
+      @id = info['id']
+      @user_id = info['user_id']
+      @question_id = info['question_id']
   end
 
 end
